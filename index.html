@@ -1,0 +1,132 @@
+<!--
+  This is a sample for the emojidex javascript web client.
+  The client includes three modules and wraps the emojidex API client.
+  You can find the sources at:
+  emojidex-web [emojidex]: https://github.com/emojidex/emojidex-web
+  emojidex-web-client [emojidex-client]: https://github.com/emojidex/emojidex-web-client
+
+  Feel free to fork/submit bug reports/send feature requests/provide fixes through GitHub.
+-->
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>emojidex test page</title>
+    <!-- load our scripts and style sheets -->
+    <!-- grab jquery for the initialization code ↓ -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!-- include the emojidex-web stylesheet -->
+    <link href="http://cdn.emojidex.com/scripts/css/emojidex.min.css" rel="stylesheet" />
+    <!-- grab the latest version of emojidex-web -->
+    <script src="http://cdn.emojidex.com/scripts/javascript/emojidex.min.js"></script>
+  </head>
+  <body>
+    <h1>emojidex web demo</h1>
+    <!-- note how emoji are automatically sized for the larger H2 text -->
+    <h2>A fields of text in the body with em😜🏼ji and short codes mixed in</h2>
+    <p>Paragraph test code :eyes: 💕</p>
+    <div>Div test code :cupcake: 🌯</div>
+    <span>Span test code :ドリフト: 🐽</span>
+    <div class="no_emoji">Div with "no_emoji" class test code :cupcake: 🌯</div>
+    <div class="emojidexify">Div with "emojidexify" class test code :cupcake: 🌯</div>
+    This is a blank image with an emoji alt (and should not be processed): <img alt="♥" />
+    <br />
+    <code>
+      This code should not be converted :processing:
+    </code>
+
+    <h1>:right wing:emojidex:left wing: enabled text area</h1>
+    <!-- textarea only supports plain text: autocomplete enters raw emoji codes/short-codes -->
+    <textarea class="emojidexify" style="width:800px;">
+      text areas are plain text only:
+      (blue heart→)💙 (short code)→:ninja:
+    </textarea>
+
+    <h1>:86 taillight(left):emojidex:86 taillight(right): enabled content-editable</h1>
+
+    <h2>DIV</h2>
+    <!--
+      this is a very plain contenteditable div - most contenteditable divs are
+      heavily modified and those modifications can conflict with how emojidexReplace works.
+      Because of this parsing content editable divs is disabled by default in 
+      emojidexReplace - you must set { ignoreContentEditable: true } on initialization of
+      emojidexReplace to enable automatic conversion. If emojidexReplace is incompatible
+      with your contenteditable div, you can manually convert at the timing of your choice
+      using the "emojify" method in the Utility module of the EmojidexClient.
+    -->
+    <div id="emojified_form" class="emojidexify" style="width:800px; border:2px solid black;"
+      contenteditable="true">
+      content editable fields show emoji inline: (blue heart→)💙 (short code)→:ninja:
+    </div>
+    <!-- hook up a de-emojification to a send button to de-emojify html into plain text -->
+    <button id="send_button" type="button">Send (to console as plain text)</button>
+
+    <!-- set up a button to open the palette -->
+    <button id="emoji_palette_button" type="button">Palette</button>
+
+    <h2>SPAN</h2>
+    <span class="emojidexify" style="width:800px; border:2px solid black;">
+      (blue heart→)💙 (short code)→:ninja:
+    </span>
+
+    <!-- this div tests the even observer/AJAX observer included in emojidexReplace -->
+    <div id="ajax_test">
+      :heart::heart::heart::heartless:💙💙💙
+    </div>
+
+    <div id="pre_process_test" style="font-size: 32px">
+      :ファラフェル:
+    </div>
+
+    <script>
+      $(document).ready(function() { // initialize after the page has loaded
+        // put your other initialization code here
+        var EC = new EmojidexClient({ onReady: function(client) {
+            client.Util.emojify("🎨").then(function(result) {
+              $("#emoji_palette_button").html(result);
+            });
+
+            $("#send_button").click(function() {
+              console.log("Send button clicked!");
+              console.log(EC.Util.deEmojifyHTML($("#emojified_form").html()));
+            });
+
+            client.Util.emojify($("div.emojidexify").text()).then(function(result) {
+              $("div.emojidexify").html(result);
+            });
+          }
+        });
+
+        // enable search/auto-complete when ':' is typed into a compatible element
+        // with the style "emojidexify"
+        $(".emojidexify").emojidexAutocomplete({"listLimit": 7});
+
+
+		// Attach emojidexPalette to a button
+		$("button#emoji_palette_button").emojidexPalette();
+
+        // enable emojidex replacement
+        // (scans for UTF-8 emoji characters and :short codes: and replaces them with emoji)
+        $("body").emojidexReplace({
+          //ignore: 'script, noscript, canvas, img, style, iframe, input, textarea, pre, code, .no_emoji',
+          //selector: ".emojidexify",
+          //ignoreContentEditable: false,
+          onComplete: function(element) {
+            setInterval(function() {
+              return $('#ajax_test').append('*:heart::heart:-💙💙*');
+            }, 5000);
+
+            setInterval(function() {
+              return EC.Util.emojify("💃1💃🏻2💃🏼3💃🏽4💃🏾5💃🏿6:processing:").then(
+                  function (emojified_text) {
+                $('#pre_process_test').append(emojified_text);
+              });
+            }, 5000);
+
+            console.log('Completed emojidexReplace!!');
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
