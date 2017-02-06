@@ -1,0 +1,59 @@
+<!--
+  This is a sample for the emojidex javascript web client.
+  The client includes three modules and wraps the emojidex API client.
+  You can find the sources at:
+  emojidex-web [emojidex]: https://github.com/emojidex/emojidex-web
+  emojidex-web-client [emojidex-client]: https://github.com/emojidex/emojidex-web-client
+
+  Feel free to fork/submit bug reports/send feature requests/provide fixes through GitHub.
+-->
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>emojidex test page</title>
+    <!-- load our scripts and style sheets -->
+    <!-- grab jquery for the initialization code ↓ -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!-- include the emojidex-web stylesheet -->
+    <link href="https://cdn.emojidex.com/scripts/css/emojidex.min.css" rel="stylesheet" />
+    <!-- grab the latest version of emojidex-web -->
+    <script src="https://cdn.emojidex.com/scripts/javascript/emojidex.min.js"></script>
+  </head>
+  <body>
+
+    <h1>emojidex enabled text area</h1>
+    <!-- textarea only supports plain text: autocomplete enters raw emoji codes/short-codes -->
+    <textarea class="emojidexify" style="width:800px;">
+      text areas are plain text only:
+      (blue heart→)💙 (short code)→:ninja:
+    </textarea>
+
+    <h1>emojidex enabled content-editable</h1>
+
+    <h2>DIV</h2>
+    <!--
+      this is a very plain contenteditable div - most contenteditable divs are
+      heavily modified and those modifications can conflict with how emojidexReplace works.
+      Because of this parsing content editable divs is disabled by default in 
+      emojidexReplace - you must set { ignoreContentEditable: true } on initialization of
+      emojidexReplace to enable automatic conversion. If emojidexReplace is incompatible
+      with your contenteditable div, you can manually convert at the timing of your choice
+      using the "emojify" method in the Utility module of the EmojidexClient.
+    -->
+    <div id="emojified_form" class="emojidexify" style="width:800px; border:2px solid black;"
+      contenteditable="true">
+      content editable fields show emoji inline: (blue heart→)💙 (short code)→:ninja:
+    </div>
+
+    <script>
+      $(document).ready(function() { // initialize after the page has loaded
+        // put your other initialization code here
+
+        // enable search/auto-complete when ':' is typed into a compatible element
+        // with the style "emojidexify"
+        $(".emojidexify").emojidexAutocomplete({"listLimit": 7});
+      });
+    </script>
+  </body>
+</html>

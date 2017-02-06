@@ -1,0 +1,67 @@
+<!--
+  This is a sample for the emojidex javascript web client.
+  The client includes three modules and wraps the emojidex API client.
+  You can find the sources at:
+  emojidex-web [emojidex]: https://github.com/emojidex/emojidex-web
+  emojidex-web-client [emojidex-client]: https://github.com/emojidex/emojidex-web-client
+
+  Feel free to fork/submit bug reports/send feature requests/provide fixes through GitHub.
+-->
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>emojidex test page</title>
+    <!-- load our scripts and style sheets -->
+    <!-- grab jquery for the initialization code ↓ -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <!-- include the emojidex-web stylesheet -->
+    <link href="https://cdn.emojidex.com/scripts/css/emojidex.min.css" rel="stylesheet" />
+    <!-- grab the latest version of emojidex-web -->
+    <script src="https://cdn.emojidex.com/scripts/javascript/emojidex.min.js"></script>
+  </head>
+  <body>
+    <!-- note how emoji are automatically sized for the larger H2 text -->
+    <h2>A fields of text in the body with em😜🏼ji and short codes mixed in</h2>
+    <p>Paragraph test code :eyes: 💕</p>
+    <div>Div test code :cupcake: 🌯</div>
+    <span>Span test code :ドリフト: 🐽</span>
+    <div class="no_emoji">Div with "no_emoji" class test code :cupcake: 🌯</div>
+    <div class="emojidexify">Div with "emojidexify" class test code :cupcake: 🌯</div>
+    This is a blank image with an emoji alt (and should not be processed): <img alt="♥" />
+    <br />
+    <code>
+      This code should not be converted :processing:
+    </code>
+
+    <span class="emojidexify" style="width:800px; border:2px solid black;">
+      (blue heart→)💙 (short code)→:ninja:
+    </span>
+
+    <!-- this div tests the even observer/AJAX observer included in emojidexReplace -->
+    <div id="ajax_test">
+      :heart::heart::heart::heartless:💙💙💙
+    </div>
+
+    <script>
+      $(document).ready(function() { // initialize after the page has loaded
+        // put your other initialization code here
+
+        // enable emojidex replacement
+        // (scans for UTF-8 emoji characters and :short codes: and replaces them with emoji)
+        $("body").emojidexReplace({
+          //ignore: 'script, noscript, canvas, img, style, iframe, input, textarea, pre, code, .no_emoji',
+          //selector: ".emojidexify",
+          //ignoreContentEditable: false,
+          onComplete: function(element) {
+            setInterval(function() {
+              return $('#ajax_test').append('*:heart::heart:-💙💙*');
+            }, 5000);
+
+            console.log('Completed emojidexReplace!!');
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
